@@ -31,7 +31,11 @@ router.post('/signin', function(req, res, err) {
       handleError(res, err.message, 'Login failed', 400);
     } else if (!user) {
       // No user found with that username
-      handleError(res, 'Username or password invalid', 'Login failed', 400);
+      res.status(200).json({
+        code: 200,
+        data: {},
+        message: 'Username or password invalid'
+      });
     } else {
       // Make sure the password is correct
       user.verifyPassword(password, function(err, isMatch) {
@@ -39,7 +43,11 @@ router.post('/signin', function(req, res, err) {
           handleError(res, err.message, 'Login failed', 400);
         } else if (!isMatch) {
           // Password did not match
-          handleError(res, 'Username or password invalid', 'Login failed', 400);
+          res.status(200).json({
+            code: 200,
+            data: {},
+            message: 'Username or password invalid'
+          });
         } else {
           var token = new Token({
             value: createToken(username + new Date()),
@@ -52,7 +60,7 @@ router.post('/signin', function(req, res, err) {
               handleError(res, err.message, 'Login failed', 400);
             } else {
               res.status(200).json({
-                code: 201,
+                code: 200,
                 data: token,
                 message: 'Login Successfully'
               });
