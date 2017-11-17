@@ -14,11 +14,9 @@ function handleError(res, reason, message, code) {
     error: [{ userMessage: message, internalMessage: reason, code: code }]
   });
 }
-function uid(username) {
-  var md5sum = crypto.createHash('md5');
-  var string = username + new Date();
-  console.log(string);
-  var hash = md5sum.update(string).digest('hex');
+function createToken(string) {
+  var sha256 = crypto.createHash('sha256');
+  var hash = sha256.update(string).digest('hex');
   console.log(hash);
 
   return hash;
@@ -44,7 +42,7 @@ router.post('/signin', function(req, res, err) {
           handleError(res, 'Username or password invalid', 'Login failed', 400);
         } else {
           var token = new Token({
-            value: uid(username),
+            value: createToken(username + new Date()),
             userId: user._id
           });
 
